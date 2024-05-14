@@ -43,6 +43,7 @@ resource "azurerm_network_interface" "example" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.example.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.example.id
   }
 }
 
@@ -71,5 +72,17 @@ resource "azurerm_linux_virtual_machine" "example" {
     offer     = "debian-11"
     sku       = "11-backports-gen2"
     version   = "latest"
+  }
+}
+
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip
+resource "azurerm_public_ip" "example" {
+  name                = "acceptanceTestPublicIp1"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  lifecycle {
+    create_before_destroy = true
   }
 }
