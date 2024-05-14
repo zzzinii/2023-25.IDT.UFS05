@@ -9,13 +9,15 @@
 		"ghcr.io/devcontainers/features/azure-cli:1": {},
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
 		"ghcr.io/devcontainers/features/node:1": {},
-		"ghcr.io/devcontainers/features/python:1": {}
+		"ghcr.io/devcontainers/features/python:1": {},
+		"ghcr.io/devcontainers/features/terraform:1": {}
 	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"ms-azuretools.vscode-docker",
-				"eamodio.gitlens"
+				"eamodio.gitlens",
+				"hashicorp.terraform"
 			]
 		}
 	}
