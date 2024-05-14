@@ -18,6 +18,10 @@ provider "azurerm" {
 resource "azurerm_resource_group" "rg" {
   name     = "<sandbox created resource group uuid>"
   location = "westus"
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "azurerm_virtual_network" "example" {
