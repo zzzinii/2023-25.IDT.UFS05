@@ -3,7 +3,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.0.0"
+      version = "3.108.0"
     }
   }
   required_version = ">= 0.14.9"
@@ -13,7 +13,7 @@ provider "azurerm" {
 }
 
 variable "AZURE_RESOURCE_GROUP" {
-  type    = string
+  type = string
 }
 
 variable "AZURE_REGION" {
@@ -44,21 +44,20 @@ resource "azurerm_service_plan" "appserviceplan" {
 
 # Create the web app, pass in the App Service Plan ID
 resource "azurerm_linux_web_app" "webapp" {
-  name                  = "webapp-${random_integer.ri.result}"
-  location              = azurerm_resource_group.rg.location
-  resource_group_name   = azurerm_resource_group.rg.name
-  service_plan_id       = azurerm_service_plan.appserviceplan.id
-  https_only            = true
-  site_config { 
-    minimum_tls_version = "1.2"
+  name                = "webapp-${random_integer.ri.result}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  service_plan_id     = azurerm_service_plan.appserviceplan.id
+  https_only          = true
+  app_settings = {
+    WEBSITES_PORT = "1880"
   }
-}
-
-#  Deploy code from a public GitHub repo
-resource "azurerm_app_service_source_control" "sourcecontrol" {
-  app_id             = azurerm_linux_web_app.webapp.id
-  repo_url           = "https://github.com/Azure-Samples/nodejs-docs-hello-world"
-  branch             = "master"
-  use_manual_integration = true
-  use_mercurial      = false
+  site_config {
+    minimum_tls_version = "1.2"
+    always_on           = "true"
+    application_stack {
+      docker_image_name   = "nodered/node-red:3.1.10-14"
+      docker_registry_url = "https://index.docker.io"
+    }
+  }
 }

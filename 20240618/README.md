@@ -10,3 +10,8 @@ export TF_VAR_AZURE_RESOURCE_GROUP=learn-...
 terraform init
 
 terraform import azurerm_resource_group.rg '...'
+
+az webapp log tail --name '...' --resource-group $TF_VAR_AZURE_RESOURCE_GROUP
+
+
+node-red-dashboard
