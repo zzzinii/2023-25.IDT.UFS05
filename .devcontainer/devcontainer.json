@@ -17,6 +17,9 @@
 			"extensions": [
 				"ms-azuretools.vscode-docker",
 				"eamodio.gitlens",
+				"ms-python.vscode-pylance",
+				"ms-python.python",
+				"ms-python.debugpy",
 				"hashicorp.terraform"
 			]
 		}
