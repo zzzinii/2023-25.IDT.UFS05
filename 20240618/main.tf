@@ -16,6 +16,10 @@ variable "AZURE_RESOURCE_GROUP" {
   type = string
 }
 
+variable "AZURE_APP_SERVICE_REPO_URL" {
+  type = string
+}
+
 variable "AZURE_REGION" {
   type    = string
   default = "westus"
@@ -35,7 +39,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Create the Linux App Service Plan
 resource "azurerm_service_plan" "appserviceplan" {
-  name                = "webapp-asp-${random_integer.ri.result}"
+  name                = "webapp-${random_integer.ri.result}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   os_type             = "Linux"
@@ -43,21 +47,49 @@ resource "azurerm_service_plan" "appserviceplan" {
 }
 
 # Create the web app, pass in the App Service Plan ID
-resource "azurerm_linux_web_app" "webapp" {
-  name                = "webapp-${random_integer.ri.result}"
+resource "azurerm_linux_web_app" "nodered" {
+  name                = "nodered-${random_integer.ri.result}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   service_plan_id     = azurerm_service_plan.appserviceplan.id
   https_only          = true
   app_settings = {
+    # https://learn.microsoft.com/en-us/azure/app-service/reference-app-settings
+    # For a custom container, the custom port number on the container for App Service to route requests to. By default, App Service attempts automatic port detection of ports 80 and 8080. This setting isn't injected into the container as an environment variable.
     WEBSITES_PORT = "1880"
   }
   site_config {
     minimum_tls_version = "1.2"
     always_on           = "true"
     application_stack {
+    # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app#application_stack
       docker_image_name   = "nodered/node-red:3.1.10-14"
       docker_registry_url = "https://index.docker.io"
     }
   }
+}
+
+resource "azurerm_linux_web_app" "python" {
+  name                = "python-${random_integer.ri.result}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  service_plan_id     = azurerm_service_plan.appserviceplan.id
+  https_only          = true
+  app_settings = {
+  }
+  site_config {
+    minimum_tls_version = "1.2"
+    app_command_line = ". 20240000/a-flask-app/entrypoint.sh"
+    application_stack {
+      python_version = "3.10"
+    }
+  }
+}
+
+resource "azurerm_app_service_source_control" "python_scm" {
+  app_id   = azurerm_linux_web_app.python.id
+  repo_url = var.AZURE_APP_SERVICE_REPO_URL
+  branch   = "master"
+  use_manual_integration = true
+  use_mercurial      = false
 }

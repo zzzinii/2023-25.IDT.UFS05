@@ -1,4 +1,5 @@
 from flask import Flask, redirect, render_template, request
+import os
 
 appWeb = Flask(__name__)
 
@@ -111,4 +112,9 @@ def registrazione_post():
     return redirect("/home")
 
 if __name__ == "__main__":
-    appWeb.run()
+    # https://learn.microsoft.com/en-us/azure/app-service/reference-app-settings
+    # SERVER_PORT Read-only. The port the app should listen to.
+    if "PORT" in os.environ:
+        appWeb.run(host="0.0.0.0", port=os.environ['PORT'])
+    else:
+        appWeb.run(host="0.0.0.0")

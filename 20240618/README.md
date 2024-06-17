@@ -6,6 +6,7 @@ https://learn.microsoft.com/en-us/azure/app-service/provision-resource-terraform
 
 
 export TF_VAR_AZURE_RESOURCE_GROUP=learn-...
+export TF_VAR_AZURE_APP_SERVICE_REPO_URL='....'
 
 terraform init
 
@@ -15,3 +16,5 @@ az webapp log tail --name '...' --resource-group $TF_VAR_AZURE_RESOURCE_GROUP
 
 
 node-red-dashboard
+
+terraform destroy --target azurerm_linux_web_app.python_webapp
