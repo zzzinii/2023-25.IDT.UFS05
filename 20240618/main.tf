@@ -93,3 +93,17 @@ resource "azurerm_app_service_source_control" "python_scm" {
   use_manual_integration = true
   use_mercurial      = false
 }
+
+resource "azurerm_mysql_flexible_server" "example" {
+  name                   = "its-rizzoli-idt-mysql-${random_integer.ri.result}"
+  resource_group_name    = azurerm_resource_group.rg.name
+  location               = azurerm_resource_group.rg.location
+  administrator_login    = "psqladmin"
+  // WARN DONT DO THIS, USE SecOps services like Doppler and Azure Key Vault
+  administrator_password = "H@Sh1CoR3!"
+  sku_name = "GP_Standard_D2ds_v4"
+}
+
+output "mysql_fqdn" {
+  value = azurerm_mysql_flexible_server.example.fqdn
+}
