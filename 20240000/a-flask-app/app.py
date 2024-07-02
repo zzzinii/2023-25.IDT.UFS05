@@ -115,6 +115,6 @@ if __name__ == "__main__":
     # https://learn.microsoft.com/en-us/azure/app-service/reference-app-settings
     # SERVER_PORT Read-only. The port the app should listen to.
     if "PORT" in os.environ:
-        appWeb.run(host="0.0.0.0", port=os.environ['PORT'])
+        appWeb.run(host="its-rizzoli-idt-mysql-52577.mysql.database.azure.com", port=os.environ['PORT'])
     else:
-        appWeb.run(host="0.0.0.0")
+        appWeb.run(host="its-rizzoli-idt-mysql-52577.mysql.database.azure.com ")
